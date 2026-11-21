@@ -1,0 +1,12 @@
+COLOQUE AQUI OS ARQUIVOS .zip DOS OVERLAYS GRÁTIS
+
+Exemplo de configuração no js/catalog.js:
+
+  downloadUrl: 'downloads/starter-pack.zip'
+
+Ou seja, este arquivo deve ser substituído por:
+
+  downloads/starter-pack.zip
+
+Enquanto o arquivo não existir, o botão "Baixar grátis" vai falhar
+(no navegador) ou o app vai reportar erro (na WebView).

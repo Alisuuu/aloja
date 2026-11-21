@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: alive-store
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: ""
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: TELEGRAM_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
