@@ -88,34 +88,62 @@
     } catch (e) { cb(e); }
   }
 
+  var CACHE_KEY = 'ALIVE_COMMUNITY_THEMES';
+
+  function applyThemes(themesList) {
+    if (!Array.isArray(themesList)) return [];
+    var cat = window.ALIVE_CATALOG;
+    var products = themesList.map(toProduct);
+
+    // Elimina duplicatas: remove temas estáticos anteriores que tenham o mesmo nome ou ID
+    var norm = function (s) { return String(s || '').trim().toLowerCase().replace(/[^a-z0-9]/g, ''); };
+    var newNames = products.map(function (p) { return norm(p.name); });
+    var newIds = products.map(function (p) { return p.id; });
+    var newThemeIds = products.map(function (p) { return p.themeInfo && p.themeInfo.themeId; }).filter(Boolean);
+
+    for (var i = cat.length - 1; i >= 0; i--) {
+      var item = cat[i];
+      var itemTid = item.themeInfo && item.themeInfo.themeId;
+      if (injected.indexOf(item.id) !== -1 ||
+          newIds.indexOf(item.id) !== -1 ||
+          newNames.indexOf(norm(item.name)) !== -1 ||
+          (itemTid && newThemeIds.indexOf(itemTid) !== -1)) {
+        cat.splice(i, 1);
+      }
+    }
+
+    injected = products.map(function (p) { return p.id; });
+    Array.prototype.push.apply(cat, products);
+    window.ALIVE_THEMES = products;
+
+    try {
+      document.dispatchEvent(new CustomEvent('alive:themes', { detail: { count: products.length } }));
+    } catch (e) {
+      var ev = document.createEvent('Event');
+      ev.initEvent('alive:themes', false, false);
+      document.dispatchEvent(ev);
+    }
+    return products;
+  }
+
   function load() {
+    // Carrega instantaneamente do cache local se disponível (imunidade a spin down de 50s no Render)
+    try {
+      var cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        var parsed = JSON.parse(cached);
+        if (parsed && Array.isArray(parsed.themes)) {
+          applyThemes(parsed.themes);
+        }
+      }
+    } catch (e) {}
+
     request(API, function (err, data) {
       var products = [];
       try {
         if (!err && data && Array.isArray(data.themes)) {
-          var cat = window.ALIVE_CATALOG;
-          products = data.themes.map(toProduct);
-
-          // Elimina duplicatas: remove temas estáticos anteriores que tenham o mesmo nome ou ID
-          var norm = function (s) { return String(s || '').trim().toLowerCase().replace(/[^a-z0-9]/g, ''); };
-          var newNames = products.map(function (p) { return norm(p.name); });
-          var newIds = products.map(function (p) { return p.id; });
-          var newThemeIds = products.map(function (p) { return p.themeInfo && p.themeInfo.themeId; }).filter(Boolean);
-
-          for (var i = cat.length - 1; i >= 0; i--) {
-            var item = cat[i];
-            var itemTid = item.themeInfo && item.themeInfo.themeId;
-            if (injected.indexOf(item.id) !== -1 ||
-                newIds.indexOf(item.id) !== -1 ||
-                newNames.indexOf(norm(item.name)) !== -1 ||
-                (itemTid && newThemeIds.indexOf(itemTid) !== -1)) {
-              cat.splice(i, 1);
-            }
-          }
-
-          injected = products.map(function (p) { return p.id; });
-          Array.prototype.push.apply(cat, products);
-          window.ALIVE_THEMES = products;
+          products = applyThemes(data.themes);
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
         } else if (window.console) {
           console.info('[themes] storage indisponível — usando catálogo estático');
         }
@@ -124,16 +152,8 @@
         if (window.console) console.warn('[themes] falha ao montar catálogo:', e);
       }
 
-      // SEMPRE avisa — as páginas precisam saber que a tentativa acabou
-      try {
-        document.dispatchEvent(new CustomEvent('alive:themes', { detail: { count: products.length } }));
-      } catch (e) {
-        var ev = document.createEvent('Event');
-        ev.initEvent('alive:themes', false, false);
-        document.dispatchEvent(ev);
-      }
       if (window.console && products.length) {
-        console.info('[themes] ' + products.length + ' tema(s) carregado(s) do storage');
+        console.info('[themes] ' + products.length + ' tema(s) carregado(s) da comunidade');
       }
     });
   }

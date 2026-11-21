@@ -1025,5 +1025,21 @@ const server = http.createServer(async (req, res) => {
     console.log('✔ servidor em http://localhost:' + PORT + '  (loja + API de storage)');
     console.log('  GET  /api/themes  → temas que a loja consome');
     console.log('  POST /api/upload  → sobe manualmente (vai pro grupo)');
+
+    // Keep-alive para Render (evita spin down de 50s por inatividade no tier gratuito)
+    const renderUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || 'https://alive-store.onrender.com';
+    const isCloud = !!(process.env.RENDER || process.env.RENDER_EXTERNAL_URL || process.env.PORT === '10000');
+    if (isCloud && renderUrl) {
+      const pingTarget = renderUrl.replace(/\/+$/, '') + '/health';
+      const PING_INTERVAL = 10 * 60 * 1000; // a cada 10 minutos
+      setInterval(() => {
+        try {
+          const u = new URL(pingTarget);
+          const client = u.protocol === 'https:' ? require('https') : require('http');
+          client.get(pingTarget, (res) => { res.resume(); }).on('error', () => {});
+        } catch (e) {}
+      }, PING_INTERVAL);
+      console.log('✔ keep-alive ativo no Render a cada 10 min: ' + pingTarget);
+    }
   });
 })();

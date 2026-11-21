@@ -59,12 +59,13 @@
   <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalName">
     <div class="modal-backdrop"></div>
     <div class="modal-panel">
-      <button class="btn-icon modal-close" id="modalClose" aria-label="Fechar">
+      <button class="modal-close" id="modalClose" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
-      <div class="modal-grid">
-        <div class="modal-art" id="modalArt"></div>
-        <div class="modal-content">
+      <div class="modal-scroll-wrap">
+        <div class="modal-grid">
+          <div class="modal-art" id="modalArt"></div>
+          <div class="modal-content">
           <span class="card-cat" id="modalCat"></span>
           <h2 class="display" id="modalName" style="margin:0;font-size:26px">—</h2>
           <p class="muted" id="modalTag" style="margin:0"></p>
@@ -126,6 +127,7 @@
           <div id="modalExtra"></div>
         </div>
       </div>
+      </div>
     </div>
   </div>
 
@@ -133,11 +135,12 @@
   <div class="modal" id="publishModal" role="dialog" aria-modal="true" aria-labelledby="publishTitle">
     <div class="modal-backdrop"></div>
     <div class="modal-panel publish-panel">
-      <button class="btn-icon modal-close" id="publishClose" aria-label="Fechar">
+      <button class="modal-close" id="publishClose" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
 
-      <div class="publish-body">
+      <div class="modal-scroll-wrap">
+        <div class="publish-body">
         <div class="publish-header">
           <span class="tag tag-cyan">Comunidade Alive</span>
           <h2 class="display" id="publishTitle" style="margin:6px 0 4px;font-size:22px">Publicar Tema</h2>
@@ -166,6 +169,7 @@
         <div class="publish-status-box" id="publishStatus" style="display:none"></div>
 
         <button class="btn btn-primary btn-lg" id="publishSubmitBtn" style="width:100%" disabled>Publicar Tema</button>
+      </div>
       </div>
     </div>
   </div>
