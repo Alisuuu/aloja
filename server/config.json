@@ -1,8 +1,8 @@
 {
-  "token": "9138219424:AAF28hIZ9xUWJd7gk5BVMnpGlLCf3arVFgE",
-  "chatId": "-1003965655311",
+  "token": "",
+  "chatId": "",
   "_nota": "chatId vazio = o servidor captura o ID do grupo sozinho assim que você mandar /start (ou qualquer comando) para @Alive1_Bot dentro do grupo. Depois ele é gravado aqui automaticamente.",
-  "updateOffset": 498326844,
+  "updateOffset": 0,
   "publicUrl": "",
   "notify": true,
   "allowAnyMember": false,
