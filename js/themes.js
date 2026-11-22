@@ -96,19 +96,28 @@
     var cat = window.ALIVE_CATALOG;
     var products = themesList.map(toProduct);
 
-    // Elimina duplicatas: remove temas estáticos anteriores que tenham o mesmo nome ou ID
+    // Deduplicação segura: só substitui se for do MESMO AUTOR!
     var norm = function (s) { return String(s || '').trim().toLowerCase().replace(/[^a-z0-9]/g, ''); };
+    var newAuthors = products.map(function (p) { return norm(p.author || (p.themeInfo && p.themeInfo.author)); });
     var newNames = products.map(function (p) { return norm(p.name); });
     var newIds = products.map(function (p) { return p.id; });
     var newThemeIds = products.map(function (p) { return p.themeInfo && p.themeInfo.themeId; }).filter(Boolean);
 
     for (var i = cat.length - 1; i >= 0; i--) {
       var item = cat[i];
+      var itemAuthor = norm(item.author || (item.themeInfo && item.themeInfo.author));
       var itemTid = item.themeInfo && item.themeInfo.themeId;
+      var itemName = norm(item.name);
+
+      // Só remove tema anterior se o ID bater ou se for o MESMO NOME + MESMO AUTOR
+      var isSameAuthorTheme = newNames.some(function (nm, idx) {
+        return nm === itemName && (!itemAuthor || !newAuthors[idx] || itemAuthor === newAuthors[idx]);
+      });
+
       if (injected.indexOf(item.id) !== -1 ||
           newIds.indexOf(item.id) !== -1 ||
-          newNames.indexOf(norm(item.name)) !== -1 ||
-          (itemTid && newThemeIds.indexOf(itemTid) !== -1)) {
+          (itemTid && newThemeIds.indexOf(itemTid) !== -1) ||
+          isSameAuthorTheme) {
         cat.splice(i, 1);
       }
     }

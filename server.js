@@ -434,16 +434,24 @@ async function ingest(buf, name, sourceMsg, zipFileId, opts) {
     errors: pub.errors
   };
 
-  // re-post do mesmo tema substitui a entrada anterior (não duplica na loja)
+  // re-post do mesmo tema: SÓ substitui se for comprovadamente do MESMO AUTOR!
+  // Protege o criador original contra substituição indevida por outros usuários.
   if (entry.theme) {
     const norm = s => String(s || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
     const entryName = norm(entry.theme.name);
+    const entryAuthor = norm(entry.theme.author);
     const entryTid = entry.theme.themeId;
 
     const dup = db.files.find(f => {
       if (!f.theme) return false;
-      if (entryTid && f.theme.themeId && f.theme.themeId === entryTid) return true;
-      if (entryName && norm(f.theme.name) === entryName) return true;
+      const dupAuthor = norm(f.theme.author);
+
+      // Se os autores forem diferentes, NUNCA substitui o tema de outro usuário!
+      if (entryAuthor && dupAuthor && entryAuthor !== dupAuthor) return false;
+
+      // Substitui se for o mesmo themeId (mesmo autor) OU (mesmo nome E mesmo autor)
+      if (entryTid && f.theme.themeId && f.theme.themeId === entryTid && (!entryAuthor || entryAuthor === dupAuthor)) return true;
+      if (entryName && norm(f.theme.name) === entryName && entryAuthor && entryAuthor === dupAuthor) return true;
       return false;
     });
 

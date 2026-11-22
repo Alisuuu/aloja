@@ -35,14 +35,17 @@
       });
     }
 
-    // Deduplicação estrita: elimina duplicatas por id e por nome normalizado
+    // Deduplicação: por id e por (nome + autor) para preservar criações de autores diferentes
     var seenKeys = {};
     list = list.filter(function (p) {
-      var norm = String(p.name || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-      var key = (p.id || '') + '::' + norm;
-      if (seenKeys[key] || (norm && seenKeys[norm])) return false;
-      seenKeys[key] = true;
-      if (norm) seenKeys[norm] = true;
+      var normName = String(p.name || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+      var normAuthor = String(p.author || (p.themeInfo && p.themeInfo.author) || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+      var idKey = p.id || '';
+      var nameAuthorKey = normName + '::' + normAuthor;
+
+      if ((idKey && seenKeys[idKey]) || (normName && seenKeys[nameAuthorKey])) return false;
+      if (idKey) seenKeys[idKey] = true;
+      if (normName) seenKeys[nameAuthorKey] = true;
       return true;
     });
 
