@@ -100,7 +100,7 @@
   }
 
   function watermark() {
-    return '<text x="320" y="342" text-anchor="middle" font-size="12" font-weight="800" letter-spacing="4" fill="rgba(255,255,255,.42)">ALIVE</text>';
+    return '';
   }
 
   /* ---------- layouts por categoria ---------- */
@@ -108,19 +108,13 @@
     tela: function (uid, p) {
       var t = (p && (p.theme || p.themeInfo)) || {};
       return livePill(uid, t) + chatPanel(uid, t) +
-             camFrame(uid, t, 24, 176, 250, 150) + watermark();
+             camFrame(uid, t, 24, 176, 250, 150);
     },
     tema: function (uid, p) {
       var t = (p && (p.theme || p.themeInfo)) || {};
-      var name = (p && p.name) || 'TEMA';
       return livePill(uid, t) +
              chatPanel(uid, t) +
-             camFrame(uid, t, 24, 176, 250, 150) +
-             '<g transform="translate(180, 80)">' +
-               '<rect width="260" height="54" rx="12" fill="rgba(6,6,12,0.85)" stroke="url(#ac' + uid + ')" stroke-width="2"/>' +
-               '<text x="130" y="33" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff" letter-spacing="1">' + esc(name).toUpperCase() + '</text>' +
-             '</g>' +
-             watermark();
+             camFrame(uid, t, 24, 176, 250, 150);
     },
     cenas: function (uid, p) {
       var t = (p && (p.theme || p.themeInfo)) || {}, title = (p.sceneTitle || 'STARTING SOON').toUpperCase();
@@ -197,7 +191,6 @@
       return '' +
         '<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" role="img">' +
           '<rect width="640" height="360" fill="#0c0c14"/>' +
-          '<text x="320" y="180" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">' + esc(p.name || 'Alive Overlay') + '</text>' +
         '</svg>';
     }
   }
@@ -338,7 +331,6 @@
           (bgImg ? '<image href="' + esc(bgImg) + '" xlink:href="' + esc(bgImg) + '" width="640" height="72" preserveAspectRatio="xMidYMid slice" opacity="0.8"/>' : '') +
           '<rect width="640" height="72" fill="linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.88) 100%)"/>' +
           '<line x1="0" y1="0" x2="640" y2="0" stroke="#00E5FF" stroke-width="2.5"/>' +
-          '<text x="24" y="42" font-size="15" font-weight="800" fill="#ffffff" letter-spacing="1">' + name + '</text>' +
         '</g>' +
       '</svg>';
   }
@@ -352,8 +344,7 @@
         }
         return svgFor(p);
       } catch (e) {
-        var name = esc(p && p.name ? p.name : 'Tema');
-        return '<svg viewBox="0 0 640 360" role="img"><rect width="640" height="360" fill="#0d0d16"/><text x="320" y="180" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">' + name + '</text></svg>';
+        return '<svg viewBox="0 0 640 360" role="img"><rect width="640" height="360" fill="#0d0d16"/></svg>';
       }
     },
     svg: svgFor,

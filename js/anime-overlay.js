@@ -286,17 +286,6 @@
         ctx.fillStyle = '#00E5FF';
         const lineY = pos === 'bottom' ? 0 : height - 4;
         ctx.fillRect(0, lineY, width, 4);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '800 36px Sora, Inter, sans-serif';
-        ctx.textBaseline = 'middle';
-        ctx.textAlign = 'left';
-        ctx.fillText((p ? p.name : 'ALIVE').toUpperCase(), 60, height / 2);
-
-        ctx.textAlign = 'right';
-        ctx.font = '700 22px Inter, sans-serif';
-        ctx.fillStyle = '#00E5FF';
-        ctx.fillText('ALIVE OVERLAY', width - 60, height / 2);
       } else {
         const grad = ctx.createLinearGradient(0, 0, 0, height);
         grad.addColorStop(0, 'rgba(0, 0, 0, 0.88)');
@@ -309,12 +298,6 @@
         ctx.fillStyle = '#00E5FF';
         const lineX = pos === 'left' ? width - 4 : 0;
         ctx.fillRect(lineX, 0, 4, height);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '800 26px Sora, Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText((p ? p.name : 'ALIVE').toUpperCase(), width / 2, height / 2);
       }
     }
 
@@ -377,12 +360,6 @@
     grad.addColorStop(1, 'rgba(0,0,0,0.85)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 1920, 1080);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '800 48px Sora, Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText((animeName || 'ALIVE').toUpperCase(), 960, 540);
 
     return new Promise(resolve => {
       try {
