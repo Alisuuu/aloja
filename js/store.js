@@ -55,32 +55,38 @@
   }
 
   function render() {
-    if (state.tab === 'pagos') {
-      grid.innerHTML =
-        '<div class="coming-soon-card">' +
-          '<span class="coming-soon-pill">Em breve</span>' +
-          '<h3 class="coming-soon-title">Overlays Pagos em Breve</h3>' +
-          '<p class="coming-soon-desc">A loja de temas e overlays exclusivos está sendo preparada para as próximas atualizações.</p>' +
-        '</div>';
-      countEl.textContent = 'Em breve';
-      return;
+    try {
+      if (state.tab === 'pagos') {
+        grid.innerHTML =
+          '<div class="coming-soon-card">' +
+            '<span class="coming-soon-pill">Em breve</span>' +
+            '<h3 class="coming-soon-title">Overlays Pagos em Breve</h3>' +
+            '<p class="coming-soon-desc">A loja de temas e overlays exclusivos está sendo preparada para as próximas atualizações.</p>' +
+          '</div>';
+        countEl.textContent = 'Em breve';
+        return;
+      }
+
+      var list = applyFilters();
+      var emptyMsg = state.q
+        ? 'Tente outro termo de busca.'
+        : (state.tab === 'comunidade'
+            ? 'Assim que um tema for publicado, ele aparece aqui.'
+            : 'Carregando animes…');
+
+      grid.innerHTML = list.length
+        ? list.map(function (p) {
+            try { return U.cardHtml(p); } catch (e) { return ''; }
+          }).join('')
+        : '<div class="empty"><b>Nenhum produto encontrado</b>' + emptyMsg + '</div>';
+
+      countEl.textContent = list.length === 1 ? '1 produto' : list.length + ' produtos';
+
+      U.observeReveal(grid);
+      U.manageVideos(grid);
+    } catch (err) {
+      if (window.console) console.error('Erro na renderização:', err);
     }
-
-    var list = applyFilters();
-    var emptyMsg = state.q
-      ? 'Tente outro termo de busca.'
-      : (state.tab === 'comunidade'
-          ? 'Assim que um tema for publicado, ele aparece aqui.'
-          : 'Carregando animes…');
-
-    grid.innerHTML = list.length
-      ? list.map(U.cardHtml).join('')
-      : '<div class="empty"><b>Nenhum produto encontrado</b>' + emptyMsg + '</div>';
-
-    countEl.textContent = list.length === 1 ? '1 produto' : list.length + ' produtos';
-
-    U.observeReveal(grid);
-    U.manageVideos(grid);
   }
 
   /* ---------------- Modal de produto ---------------- */

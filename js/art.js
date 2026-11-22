@@ -15,7 +15,7 @@
   }
 
   function defs(uid, p) {
-    var t = p.theme || {};
+    var t = (p && (p.theme || p.themeInfo)) || {};
     return '' +
       '<defs>' +
         '<linearGradient id="bg' + uid + '" x1="0" y1="0" x2="1" y2="1">' +
@@ -42,6 +42,7 @@
   }
 
   function livePill(uid, t) {
+    t = t || {};
     return '' +
       '<g transform="translate(24,22)">' +
         '<rect width="86" height="30" rx="9" fill="rgba(6,6,12,.72)" stroke="' + esc(t.a1 || '#8b5cf6') + '" stroke-opacity=".65"/>' +
@@ -55,6 +56,7 @@
   }
 
   function camFrame(uid, t, x, y, w, h) {
+    t = t || {};
     var a1 = t.a1 || '#8b5cf6', a2 = t.a2 || '#22d3ee';
     return '' +
       '<g filter="url(#gl' + uid + ')">' +
@@ -66,6 +68,7 @@
   }
 
   function chatPanel(uid, t) {
+    t = t || {};
     var a1 = t.a1 || '#8b5cf6', a2 = t.a2 || '#22d3ee';
     var lines = [
       { w: 96, c: a1 }, { w: 72, c: 'rgba(255,255,255,.35)' },
@@ -84,6 +87,7 @@
   }
 
   function alertBanner(uid, t) {
+    t = t || {};
     var a2 = t.a2 || '#22d3ee';
     return '' +
       '<g transform="translate(180,66)" filter="url(#gl' + uid + ')">' +
@@ -102,11 +106,24 @@
   /* ---------- layouts por categoria ---------- */
   var layouts = {
     tela: function (uid, p) {
-      return livePill(uid, p.theme) + chatPanel(uid, p.theme) +
-             camFrame(uid, p.theme, 24, 176, 250, 150) + watermark();
+      var t = (p && (p.theme || p.themeInfo)) || {};
+      return livePill(uid, t) + chatPanel(uid, t) +
+             camFrame(uid, t, 24, 176, 250, 150) + watermark();
+    },
+    tema: function (uid, p) {
+      var t = (p && (p.theme || p.themeInfo)) || {};
+      var name = (p && p.name) || 'TEMA';
+      return livePill(uid, t) +
+             chatPanel(uid, t) +
+             camFrame(uid, t, 24, 176, 250, 150) +
+             '<g transform="translate(180, 80)">' +
+               '<rect width="260" height="54" rx="12" fill="rgba(6,6,12,0.85)" stroke="url(#ac' + uid + ')" stroke-width="2"/>' +
+               '<text x="130" y="33" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff" letter-spacing="1">' + esc(name).toUpperCase() + '</text>' +
+             '</g>' +
+             watermark();
     },
     cenas: function (uid, p) {
-      var t = p.theme || {}, title = (p.sceneTitle || 'STARTING SOON').toUpperCase();
+      var t = (p && (p.theme || p.themeInfo)) || {}, title = (p.sceneTitle || 'STARTING SOON').toUpperCase();
       return '' +
         '<g transform="translate(0,0)">' +
           '<circle cx="320" cy="170" r="120" fill="none" stroke="url(#ac' + uid + ')" stroke-width="2" opacity=".35"/>' +
@@ -121,7 +138,7 @@
         '</g>' + watermark();
     },
     molduras: function (uid, p) {
-      var t = p.theme || {}, a1 = t.a1 || '#8b5cf6', a2 = t.a2 || '#22d3ee';
+      var t = (p && (p.theme || p.themeInfo)) || {}, a1 = t.a1 || '#8b5cf6', a2 = t.a2 || '#22d3ee';
       return '' +
         camFrame(uid, t, 130, 74, 380, 212) +
         '<rect x="118" y="62" width="404" height="236" rx="20" fill="none" stroke="rgba(255,255,255,.16)" stroke-dasharray="4 8"/>' +
@@ -133,7 +150,8 @@
         watermark();
     },
     alertas: function (uid, p) {
-      return alertBanner(uid, p.theme) +
+      var t = (p && (p.theme || p.themeInfo)) || {};
+      return alertBanner(uid, t) +
         '<g transform="translate(150,176)">' +
           '<rect width="340" height="118" rx="18" fill="rgba(8,8,16,.82)" stroke="rgba(255,255,255,.16)"/>' +
           '<circle cx="52" cy="46" r="24" fill="url(#ac' + uid + ')" opacity=".85"/>' +
@@ -145,9 +163,10 @@
         '</g>' + watermark();
     },
     pacote: function (uid, p) {
-      return livePill(uid, p.theme) +
-        camFrame(uid, p.theme, 24, 74, 210, 128) +
-        chatPanel(uid, p.theme) +
+      var t = (p && (p.theme || p.themeInfo)) || {};
+      return livePill(uid, t) +
+        camFrame(uid, t, 24, 74, 210, 128) +
+        chatPanel(uid, t) +
         '<g transform="translate(24,220)">' +
           '<rect width="210" height="86" rx="14" fill="rgba(8,8,16,.72)" stroke="url(#ac' + uid + ')" stroke-width="2.5"/>' +
           '<circle cx="34" cy="43" r="16" fill="url(#ac' + uid + ')" opacity=".8"/>' +
@@ -164,14 +183,23 @@
   };
 
   function svgFor(p) {
+    p = p || {};
     var uid = 'p' + (++seq);
-    var layout = layouts[p.category] || layouts.tela;
-    return '' +
-      '<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Preview de ' + esc(p.name) + '">' +
-        defs(uid, p) +
-        bg(uid) +
-        layout(uid, p) +
-      '</svg>';
+    var layout = layouts[p.category] || layouts.tema || layouts.tela;
+    try {
+      return '' +
+        '<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Preview de ' + esc(p.name || 'Overlay') + '">' +
+          defs(uid, p) +
+          bg(uid) +
+          layout(uid, p) +
+        '</svg>';
+    } catch (e) {
+      return '' +
+        '<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" role="img">' +
+          '<rect width="640" height="360" fill="#0c0c14"/>' +
+          '<text x="320" y="180" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">' + esc(p.name || 'Alive Overlay') + '</text>' +
+        '</svg>';
+    }
   }
 
   /* ------------------------------------------------------------------
@@ -318,10 +346,15 @@
   window.AliveArt = {
     /** Retorna o HTML (img ou svg) do preview do produto. */
     html: function (p) {
-      if (p.image) {
-        return '<img src="' + esc(p.image) + '" alt="Preview de ' + esc(p.name) + '" loading="lazy">';
+      try {
+        if (p && p.image) {
+          return '<img src="' + esc(p.image) + '" alt="Preview de ' + esc(p.name) + '" loading="lazy">';
+        }
+        return svgFor(p);
+      } catch (e) {
+        var name = esc(p && p.name ? p.name : 'Tema');
+        return '<svg viewBox="0 0 640 360" role="img"><rect width="640" height="360" fill="#0d0d16"/><text x="320" y="180" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">' + name + '</text></svg>';
       }
-      return svgFor(p);
     },
     svg: svgFor,
     layoutSvg: layoutSvg,

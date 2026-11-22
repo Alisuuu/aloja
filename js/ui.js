@@ -84,7 +84,12 @@
     if (p.image) {
       return '<img src="' + esc(p.image) + '" alt="Preview de ' + esc(p.name) + '" loading="lazy">';
     }
-    return window.AliveArt.html(p);
+    try {
+      if (window.AliveArt && window.AliveArt.html) {
+        return window.AliveArt.html(p);
+      }
+    } catch (e) {}
+    return '<svg viewBox="0 0 640 360" role="img"><rect width="640" height="360" fill="#0c0c14"/><text x="320" y="180" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">' + esc(p.name || 'Alive') + '</text></svg>';
   }
 
   function cardHtml(p) {

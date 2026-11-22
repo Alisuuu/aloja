@@ -62,6 +62,7 @@
       standbyVideo: t.standbyUrl || (t.assetBase && t.standby && t.standby.file ? t.assetBase + encodeURIComponent(t.standby.file) : null),
       assetBase: t.assetBase || '',
       downloadUrl: t.downloadUrl,
+      theme: t,
       themeInfo: t                  // dados brutos do JSON pro modal
     };
   }
