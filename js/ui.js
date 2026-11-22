@@ -140,7 +140,7 @@
     // Composição blueprint apenas se o topo já não for a própria composição interativa
     var layout = (widgets.length && !p.isAnime)
       ? '<div class="layout-box">' +
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
             '<h4 style="margin:0">Composição · 1920×1080</h4>' +
             '<button type="button" class="layout-standby-btn" id="layoutStandbyBtn">' +
               '<span style="width:6px;height:6px;border-radius:50%;background:#00E5FF;display:inline-block"></span>' +

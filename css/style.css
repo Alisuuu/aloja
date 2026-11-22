@@ -277,11 +277,30 @@ button, input, select { font: inherit; color: inherit; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 
-.modal-grid { display: grid; grid-template-columns: 1.05fr 1fr; }
-.modal-art { background: #000; position: relative; min-height: 280px; }
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  min-width: 0;
+  width: 100%;
+}
+.modal-art {
+  background: #000;
+  position: relative;
+  min-height: 280px;
+  min-width: 0;
+  max-width: 100%;
+}
 .modal-art svg, .modal-art img { width: 100%; height: 100%; object-fit: cover; }
 .modal-art video { width: 100%; height: 100%; object-fit: contain; background: #000; }
-.modal-content { padding: 22px; display: flex; flex-direction: column; gap: 11px; }
+.modal-content {
+  padding: 22px 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 .modal-close {
   position: absolute;
   top: 14px;
@@ -621,6 +640,119 @@ button, input, select { font: inherit; color: inherit; }
   }
 }
 
+/* ============================ ADAPTAÇÃO PARA LANDSCAPE (PAISAGEM) ============================ */
+@media (orientation: landscape) {
+  .modal-panel {
+    max-height: 94dvh;
+    width: min(920px, 94vw);
+    overflow: visible;
+  }
+  .modal-scroll-wrap {
+    max-height: 94dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    min-width: 0;
+    width: 100%;
+  }
+  .modal-art {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    min-width: 0;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  .modal-content {
+    min-width: 0;
+    max-width: 100%;
+    padding: 18px 28px 24px 18px; /* Folga segura à direita para nunca cortar botões */
+    box-sizing: border-box;
+  }
+  .modal-close {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    z-index: 130;
+  }
+  .seg-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+  }
+  .seg-item {
+    flex: 1 1 calc(33.333% - 6px);
+    min-width: 70px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .layout-standby-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .buy-row {
+    position: sticky;
+    bottom: 0;
+    background: var(--card);
+    padding: 8px 0 2px;
+    z-index: 10;
+  }
+}
+
+/* Landscape em aparelhos com altura restrita (ex: celulares deitados <= 540px) */
+@media (orientation: landscape) and (max-height: 540px) {
+  .modal-panel {
+    width: min(940px, 96vw);
+    max-height: 96dvh;
+    border-radius: 14px;
+  }
+  .modal-scroll-wrap {
+    max-height: 96dvh;
+    border-radius: 14px;
+  }
+  .modal-grid {
+    grid-template-columns: 1fr 1.05fr;
+  }
+  .modal-art {
+    min-height: 190px;
+    border-radius: 12px 0 0 12px;
+  }
+  .modal-content {
+    padding: 12px 24px 16px 14px;
+    gap: 8px;
+  }
+  .modal-close {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  .seg-item {
+    padding: 6px 8px;
+    font-size: 11.5px;
+  }
+  .meta-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .meta-item {
+    padding: 6px 8px;
+  }
+  .btn-lg {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
@@ -733,13 +865,27 @@ button, input, select { font: inherit; color: inherit; }
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); font-weight: 700;
 }
 .seg-row {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
 }
 .seg-item {
-  padding: 10px 14px; border-radius: 9px;
-  background: var(--card-2); border: 1px solid var(--border);
-  color: var(--muted); font-size: 13px; font-weight: 600;
-  cursor: pointer; text-align: center; transition: all 0.15s;
+  flex: 1 1 calc(33.333% - 8px);
+  min-width: 75px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  white-space: nowrap;
 }
 .seg-item:hover { color: #fff; border-color: var(--border-strong); }
 .seg-item.active {
@@ -1346,6 +1492,8 @@ button, input, select { font: inherit; color: inherit; }
   position: absolute;
   top: 10px;
   right: 10px;
+  max-width: calc(100% - 20px);
+  box-sizing: border-box;
   z-index: 10;
   display: flex;
   gap: 4px;
@@ -1357,7 +1505,7 @@ button, input, select { font: inherit; color: inherit; }
   border: 1px solid rgba(255, 255, 255, 0.14);
 }
 .art-switch-btn {
-  padding: 5px 13px;
+  padding: 5px 11px;
   border-radius: 999px;
   font-family: inherit;
   font-size: 11px;
@@ -1367,6 +1515,7 @@ button, input, select { font: inherit; color: inherit; }
   background: transparent;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 .art-switch-btn:hover:not(.active) {
   color: #fff;
