@@ -197,7 +197,7 @@ function storageChat() {
    ========================================================================== */
 function metaFromTheme(t) {
   return {
-    themeId: t.id || null,
+    themeId: t.id || t.themeId || t.theme_id || null,
     name: t.name || 'Sem nome',
     description: t.description || '',
     author: t.author || '',
@@ -435,8 +435,18 @@ async function ingest(buf, name, sourceMsg, zipFileId, opts) {
   };
 
   // re-post do mesmo tema substitui a entrada anterior (não duplica na loja)
-  if (entry.theme && entry.theme.themeId) {
-    const dup = db.files.find(f => f.theme && f.theme.themeId === entry.theme.themeId);
+  if (entry.theme) {
+    const norm = s => String(s || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    const entryName = norm(entry.theme.name);
+    const entryTid = entry.theme.themeId;
+
+    const dup = db.files.find(f => {
+      if (!f.theme) return false;
+      if (entryTid && f.theme.themeId && f.theme.themeId === entryTid) return true;
+      if (entryName && norm(f.theme.name) === entryName) return true;
+      return false;
+    });
+
     if (dup && dup.id !== entryId) {
       db.files = db.files.filter(f => f.id !== dup.id);
       cleanupMessages(dup).catch(function () {});
