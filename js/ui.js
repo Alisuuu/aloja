@@ -93,6 +93,7 @@
   }
 
   function cardHtml(p) {
+    var author = p.author || (p.themeInfo && p.themeInfo.author) || (p.theme && p.theme.author) || (p.isAnime ? 'Alive Studio' : '');
     var subtitle = p.isAnime ? 'Overlay Celular & Tablet' : (p.tagline || 'Overlay para transmissão');
     return '' +
       '<article class="card reveal" data-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="Ver ' + esc(p.name) + '">' +
@@ -102,6 +103,7 @@
         '</div>' +
         '<div class="card-body">' +
           '<h3 class="card-title">' + esc(p.name) + '</h3>' +
+          (author ? '<p class="card-author">por <span>' + esc(author) + '</span></p>' : '') +
           '<p class="card-tag">' + esc(subtitle) + '</p>' +
           '<div class="card-foot">' +
             '<span class="card-compat-pill">Pronto para o app</span>' +

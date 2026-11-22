@@ -180,6 +180,7 @@
           animeId: item.id,
           mediaType: item.media_type,
           name: item.name || item.title || item.original_name || 'Anime',
+          author: 'Alive Studio',
           tagline: ((item.first_air_date || item.release_date || '').slice(0, 4) || '2026') + ' · Overlay sob demanda',
           description: item.overview || 'Overlay completo com banner e tela de espera pronto para o Alive.',
           category: 'tema',

@@ -29,7 +29,8 @@
     var q = state.q.trim().toLowerCase();
     if (q && state.tab !== 'alive') {
       list = list.filter(function (p) {
-        var hay = (p.name + ' ' + (p.tagline || '') + ' ' + (p.description || '') + ' ' +
+        var author = p.author || (p.themeInfo && p.themeInfo.author) || (p.theme && p.theme.author) || '';
+        var hay = (p.name + ' ' + author + ' ' + (p.tagline || '') + ' ' + (p.description || '') + ' ' +
           (p.includes || []).join(' ')).toLowerCase();
         return hay.indexOf(q) !== -1;
       });
@@ -280,7 +281,7 @@
             render();
           }
         } else if (state.tab === 'comunidade') {
-          if (searchEl) searchEl.placeholder = 'Buscar temas da comunidade…';
+          if (searchEl) searchEl.placeholder = 'Buscar temas ou autores…';
           render();
         } else if (state.tab === 'pagos') {
           if (searchEl) searchEl.placeholder = 'Em breve…';

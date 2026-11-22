@@ -76,6 +76,7 @@ window.ALIVE_CATALOG = [
     id: 'tema-artery',
     playId: 'theme_b9cc74e5_artery',
     name: 'artery',
+    author: 'Alive Studio',
     tagline: 'Overlay completo com bordas, moldura e tela de espera.',
     description: 'Overlay completo com bordas, moldura e tela de espera. Instalado direto no app Alive.',
     category: 'tema',

@@ -44,6 +44,7 @@
       id: id,
       playId: 'theme_' + (t.themeId || t.id),
       name: t.name || 'Tema sem nome',
+      author: t.author || 'Alive Studio',
       tagline: t.description || 'Tema de overlay para a sua live.',
       description: (t.description || 'Tema completo para overlay.') +
         ' Instalado direto no app Alive.',
