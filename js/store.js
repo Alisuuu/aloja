@@ -153,10 +153,17 @@
     countEl = document.getElementById('resultCount');
     modal = document.getElementById('productModal');
     var clearBtn = document.getElementById('searchClearBtn');
+    var closeBtn = document.getElementById('searchCloseBtn');
+    var searchBar = document.getElementById('searchBar');
+    var searchToggleBtn = document.getElementById('btnSearchToggle');
 
     function updateClearBtn() {
       if (!clearBtn) return;
-      clearBtn.style.display = searchEl && searchEl.value.trim() ? 'inline-flex' : 'none';
+      var hasVal = Boolean(searchEl && searchEl.value.trim());
+      clearBtn.style.display = hasVal ? 'inline-flex' : 'none';
+      if (searchEl) {
+        searchEl.style.paddingRight = hasVal ? '72px' : '42px';
+      }
     }
 
     function resetSearch() {
@@ -176,6 +183,52 @@
       }
     }
 
+    function openSearch() {
+      if (!searchBar) return;
+      searchBar.classList.add('open');
+      searchBar.style.display = 'flex';
+      if (searchToggleBtn) {
+        searchToggleBtn.classList.add('active');
+        searchToggleBtn.setAttribute('aria-expanded', 'true');
+      }
+      if (searchEl) {
+        searchEl.focus();
+      }
+    }
+
+    function closeSearch() {
+      if (!searchBar) return;
+      searchBar.classList.remove('open');
+      searchBar.style.display = 'none';
+      if (searchToggleBtn) {
+        searchToggleBtn.classList.remove('active');
+        searchToggleBtn.setAttribute('aria-expanded', 'false');
+      }
+      resetSearch();
+    }
+
+    function toggleSearch() {
+      if (searchBar && searchBar.classList.contains('open')) {
+        closeSearch();
+      } else {
+        openSearch();
+      }
+    }
+
+    if (searchToggleBtn) {
+      searchToggleBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        toggleSearch();
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        closeSearch();
+      });
+    }
+
     if (clearBtn) {
       clearBtn.addEventListener('click', function (e) {
         e.preventDefault();
@@ -187,6 +240,12 @@
     if (searchEl) {
       searchEl.addEventListener('search', function () {
         if (!searchEl.value) resetSearch();
+      });
+      searchEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeSearch();
+        }
       });
     }
 

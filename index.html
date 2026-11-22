@@ -17,7 +17,7 @@
   <!-- ============================ CABEÇALHO FIXO (ABAS + BUSCA) ============================ -->
   <header class="app-header" id="appHeader">
     <div class="container">
-      <!-- Abas Principais e Botão Publicar em Linha Única -->
+      <!-- Abas Principais, Botão Publicar e Botão Buscar em Linha Única -->
       <div class="tab-nav">
         <button class="tab-btn active" data-tab="alive">Alive</button>
         <button class="tab-btn" data-tab="comunidade">Comunidade</button>
@@ -26,16 +26,22 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <span>Publicar</span>
         </button>
+        <button type="button" class="btn-search-toggle" id="btnSearchToggle" aria-label="Abrir busca" title="Buscar" aria-expanded="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
       </div>
 
-      <!-- Barra de Busca Única -->
-      <div class="search">
-        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+      <!-- Barra de Busca (aparece apenas ao tocar no botão de busca) -->
+      <div class="search" id="searchBar" style="display:none;">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
           <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
         </svg>
         <input id="search" type="search" placeholder="Buscar animes e desenhos…" aria-label="Buscar produtos" autocomplete="off">
         <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Limpar busca" style="display:none">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <button type="button" class="search-close-btn" id="searchCloseBtn" aria-label="Fechar busca" title="Fechar busca">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
         </button>
       </div>
     </div>
